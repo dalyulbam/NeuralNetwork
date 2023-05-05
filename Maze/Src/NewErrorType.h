@@ -1,5 +1,7 @@
 #pragma once
-#include <stdexcept>
+//#include <stdexcept>
+#include <iostream>
+using namespace std; 
 
 #define CHECK(val) checkTestResult(val) 
 
@@ -26,7 +28,7 @@ int checkTestResult(int error_type)
 	return ret; 
 }
 
-void catchFunction(int error_type, int error_type_detail, string message)
+void catchFunction(int error_type, int error_type_detail, const char message[])
 {
 	cout << message << endl;
 	if (error_type_detail) throw error_type_detail;

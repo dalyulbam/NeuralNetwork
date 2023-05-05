@@ -19,7 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="main.cpp">
+      <AdditionalHeaderUnitDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalHeaderUnitDependencies)</AdditionalHeaderUnitDependencies>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">set INCLUDE=%INCLUDE%;$(USERPROFILE)\AppData\Local\Programs\Python\Python311\Lib\site-packages\pybind11\include\;$(ProjectDir)\AppData\Local\Programs\Python\Python311\Lib\site-packages\pybind11\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NewErrorType.h" />
@@ -110,10 +113,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>set INCLUDE=%INCLUDE%;$(USERPROFILE)\AppData\Local\Programs\Python\Python311\Lib\site-packages\pybind11\include\pybind11;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>$(USERPROFILE)\AppData\Local\Programs\Python\Python311\Lib\site-packages\pybind11\pybind11.cp38-win_amd64.pyd;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

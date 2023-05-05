@@ -7,6 +7,8 @@
 #include <stack>
 #include <string>
 #include "NewErrorType.h"
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 
 /*
 Class Type 

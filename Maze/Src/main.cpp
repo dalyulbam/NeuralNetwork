@@ -1,11 +1,13 @@
 #include <iostream>
 #include <sstream>
+#include <fstream>
 #include <algorithm>
 #include <string>
 #include <vector>
 #include <queue>
 #include <stack>
 #include <string>
+#include <filesystem>
 #include "NewErrorType.h"
 
 /*
@@ -249,7 +251,7 @@ int floodFillAlgorithm(WayPoint& way_point, History& record, Map2D& map, Map2D& 
 			
 			way_point.push(hist); // 1 direction 
 			floodFillAlgorithm(way_point, record, map, visited, target_pnt); 
-			//hist.pop(); // revert and consider another history along different direction 
+			hist.pop(); // revert and consider another history along different direction  
 		}
 	}
 	catch(int error_type_detail)
@@ -259,10 +261,55 @@ int floodFillAlgorithm(WayPoint& way_point, History& record, Map2D& map, Map2D& 
 	return ret;
 }
 
-//int main(int argc, char** argv[])
-//{
-//
-//}
+void saveResults(History& record, Map2D& map, string outer_directory)
+{
+	// Create a directory to save the CSV file if there is no such a directory. 
+	filesystem::path outputDir(outer_directory); 
+	if (!filesystem::exists(outer_directory)) 
+	{
+		error_code ec;
+		if (!filesystem::create_directory(outputDir, ec)) {
+			if (ec) {
+				std::cerr << "Failed to create directory: " << ec.message() << std::endl;
+				return;
+			}
+		}
+	}
+
+	ofstream csvFile_record(outer_directory + "topRecord.csv"), csvFile_map(outer_directory + "map.csv");
+	if (!csvFile_record.is_open() || !csvFile_map.is_open())
+	{
+		std::cerr << "Failed to open the CSV file for writing" << std::endl;
+		return;
+	}
+
+	// Vectorize Record
+	vector<Data> save_Data; 
+	while (!record.empty())
+	{
+		save_Data.emplace_back(record.top()); 
+		record.pop();
+	}
+
+	// Write data to the CSV file
+	for (int i = static_cast<int>(save_Data.size()) - 1; i >= 0; i--) 
+	{
+		const auto& row = save_Data[i];
+		csvFile_record << row.time << "," << row.x_cor << "," << row.y_cor << "\n";
+	}
+	for (auto& row : map) 
+	{
+		for (int i = 0; i < static_cast<int>(row.size()); i++)
+		{
+			csvFile_map << row[i] << ",";
+		}
+		csvFile_map << "\n";
+	}
+	csvFile_record.close();
+	csvFile_map.close(); 
+	cout << "CSV file saved successfully!" << endl;
+	return; 
+}
 
 int main()
 {
@@ -287,7 +334,7 @@ int main()
 		Data end_pnt_ = findChar(my_map_, 'e')[0];
 		initialize(my_map_, visited_map_);
 		floodFillAlgorithm(way_point_, top_record_, my_map_, visited_map_, end_pnt_); 
-		if (!ret) exit(1);
+		saveResults(top_record_, my_map_, "logs/");
 	}
 	catch(int error_type_detail)
 	{

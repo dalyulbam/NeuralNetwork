@@ -1,4 +1,5 @@
 import sys, os 
+import pandas as pd 
 import pygame
 import subprocess
 
@@ -7,20 +8,24 @@ def initialize():
     clock = pygame.time.Clock()
     return clock 
 
-def bringGameData():
+def buildExeAlgorithm():
     # Set up the Visual Studio environment variables
-    file_name = "temptest.cpp"
+    file_name = "main.exe"
     vcvars_path = "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Auxiliary\\Build\\vcvars64.bat"
-    subprocess.run([vcvars_path, "&&", "cl", "/EHsc", "temptest.cpp", "/link", "/ENTRY:main_test", "main_test.cpp"], check=True, shell=True)
+    subprocess.run([vcvars_path, "&&", "cl", "/EHsc", "/std:c++17", "main.cpp", "/link"], check=True, shell=True)
 
     # Run the generated executable and capture the output
     result = subprocess.run([file_name], stdout=subprocess.PIPE, text=True)
     print("C++ output:")
 
     # (Operation).cpp -> (Play).py then you don't need to leave those expansion files.
-    os.remove("temptest.exe")
-    os.remove("temptest.obj")
+    os.remove("main.obj")
     return 
+
+def loadData(log_dir):
+    pd_map = pd.read_csv(log_dir + "/map.csv")
+    pd_record = pd.read_csv(log_dir + "/topRecord.csv")
+    
 
 def setupDisplay(width : int, height: int ):
     screen = pygame.display.set_mode((width, height))
@@ -47,7 +52,7 @@ def quitGame():
 def mainRun():
         
     clock = initialize()
-    bringGameData()
+    buildExeAlgorithm()
     screen = setupDisplay(1280, 720)
     runAndShow(clock, screen)
     

@@ -16,3 +16,5 @@
 *.db-shm
 *.db-wal
 *.opendb
+Maze/Src/logs/
+Maze/Src/main.exe

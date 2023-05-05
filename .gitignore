@@ -13,3 +13,6 @@
 *.tlog
 *.filters
 *.user
+*.db-shm
+*.db-wal
+*.opendb

@@ -25,25 +25,33 @@ def buildExeAlgorithm():
 def loadData(log_dir):
     pd_map = pd.read_csv(log_dir + "/map.csv")
     pd_record = pd.read_csv(log_dir + "/topRecord.csv")
-    
+    return [pd_map, pd_record]
 
 def setupDisplay(width : int, height: int ):
     screen = pygame.display.set_mode((width, height))
     pygame.display.set_caption('C++ Maze but in pygame')
     return screen
 
+def drawMap(image_dir : str, screen, pd_map : pd.DataFrame , pd_record : pd.DataFrame ):
+    wall_img = pygame.image.load(image_dir + "/Wall.png")
+    path_img = pygame.image.load(image_dir + "/Path.png")
+
+    screen.blit(wall_img, (0, 0))
+    screen.blit(path_img, (100, 100))
+
 def runAndShow(clock, screen):
+    [pd_map, pd_record] = loadData("./logs/")
     running = True
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
     
-    # fill the screen with a color to wipe away anything from last frame
-    screen.fill("purple")
-    # flip() the display to put your work on screen
-    pygame.display.flip()
-    clock.tick(60)
+        screen.fill("black")  # fill the screen with a color to wipe away anything from last frame
+        drawMap("./images", screen, pd_map, pd_record)
+
+        pygame.display.flip() # flip() the display to put your work on screen
+        clock.tick(60)
     
 
 def quitGame():
